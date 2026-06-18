@@ -70,6 +70,10 @@ func Samples(p *profile.Profile, sampleType string) ([]Sample, error) {
 			}
 		}
 
+		if idx >= len(s.Value) {
+			return nil, fmt.Errorf("sample has %d values, want at least %d", len(s.Value), idx+1)
+		}
+
 		samples = append(samples, Sample{Stack: stack, Value: s.Value[idx]})
 	}
 
