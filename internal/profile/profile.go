@@ -1,7 +1,6 @@
 package profile
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -44,10 +43,6 @@ func LoadFile(path string) (*profile.Profile, error) {
 // sample type (e.g., "cpu", "inuse_space", "alloc_space"). Inlined frames are
 // expanded so each resolves to its own file:line.
 func Samples(p *profile.Profile, sampleType string) ([]Sample, error) {
-	if p == nil {
-		return nil, errors.New("profile is nil")
-	}
-
 	idx, err := valueIndex(p, sampleType)
 	if err != nil {
 		return nil, err
