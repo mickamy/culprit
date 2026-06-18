@@ -175,10 +175,10 @@ func dominantLine(head, base buckets, k key) int64 {
 	return base[k].hottestLine()
 }
 
-func abs(n int64) int64 {
+func abs(n int64) uint64 {
 	if n < 0 {
-		return -n
+		return uint64(-n)
 	}
 
-	return n
+	return uint64(n)
 }
