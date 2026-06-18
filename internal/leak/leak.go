@@ -1,7 +1,8 @@
 package leak
 
 import (
-	"sort"
+	"cmp"
+	"slices"
 
 	"github.com/mickamy/culprit/internal/profile"
 )
@@ -52,16 +53,15 @@ func Rank(snapshots []Snapshot) []Growth {
 		growths = append(growths, growthOf(site, xs, ys))
 	}
 
-	sort.SliceStable(growths, func(i, j int) bool {
-		a, b := growths[i], growths[j]
-		if a.Slope != b.Slope {
-			return a.Slope > b.Slope
+	slices.SortStableFunc(growths, func(a, b Growth) int {
+		if d := cmp.Compare(b.Slope, a.Slope); d != 0 {
+			return d
 		}
-		if a.Last != b.Last {
-			return a.Last > b.Last
+		if d := cmp.Compare(b.Last, a.Last); d != 0 {
+			return d
 		}
 
-		return a.Function < b.Function
+		return cmp.Compare(a.Function, b.Function)
 	})
 
 	return growths
