@@ -67,6 +67,8 @@ type bucket struct {
 // touches, so recursion does not inflate it.
 func aggregate(samples []profile.Sample) buckets {
 	acc := make(buckets)
+	seen := make(map[key]bool)
+	seenLine := make(map[lineKey]bool)
 
 	for _, s := range samples {
 		if len(s.Stack) == 0 {
@@ -76,8 +78,8 @@ func aggregate(samples []profile.Sample) buckets {
 		leaf := s.Stack[0]
 		acc.at(key{leaf.Function, leaf.File}).flat += s.Value
 
-		seen := make(map[key]bool, len(s.Stack))
-		seenLine := make(map[lineKey]bool, len(s.Stack))
+		clear(seen)
+		clear(seenLine)
 
 		for _, f := range s.Stack {
 			k := key{f.Function, f.File}
