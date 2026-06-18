@@ -6,14 +6,8 @@ import (
 	"github.com/mickamy/culprit/internal/profile"
 )
 
-type Site struct {
-	Function string
-	File     string
-	Line     int64
-}
-
 type Change struct {
-	Site
+	profile.Frame
 
 	BaseFlat int64
 	HeadFlat int64
@@ -36,7 +30,7 @@ func Rank(base, head []profile.Sample) []Change {
 
 	for k := range union(b, h) {
 		changes = append(changes, Change{
-			Site:     Site{Function: k.function, File: k.file, Line: dominantLine(h, b, k)},
+			Frame:    profile.Frame{Function: k.function, File: k.file, Line: dominantLine(h, b, k)},
 			BaseFlat: b.flat(k),
 			HeadFlat: h.flat(k),
 			BaseCum:  b.cum(k),
