@@ -70,32 +70,32 @@ func section(w io.Writer, title string, changes []diff.Change, report DiffReport
 }
 
 func humanize(v int64, unit string) string {
-	sign := "+"
-	mag := v
-
-	if v < 0 {
-		sign = "-"
-		mag = -v
-	}
-
 	switch unit {
 	case "nanoseconds":
-		return sign + time.Duration(mag).String()
+		if v > 0 {
+			return "+" + time.Duration(v).String()
+		}
+
+		return time.Duration(v).String() // Duration prints its own minus sign
 	case "bytes":
-		return sign + formatBytes(mag)
+		if v < 0 {
+			return "-" + formatBytes(uint64(-v))
+		}
+
+		return "+" + formatBytes(uint64(v))
 	default:
 		return fmt.Sprintf("%+d", v)
 	}
 }
 
-func formatBytes(b int64) string {
+func formatBytes(b uint64) string {
 	const unit = 1024
 
 	if b < unit {
 		return fmt.Sprintf("%dB", b)
 	}
 
-	div, exp := int64(unit), 0
+	div, exp := uint64(unit), 0
 	for n := b / unit; n >= unit; n /= unit {
 		div *= unit
 		exp++

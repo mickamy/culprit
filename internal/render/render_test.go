@@ -2,6 +2,7 @@ package render_test
 
 import (
 	"bytes"
+	"math"
 	"strings"
 	"testing"
 
@@ -51,6 +52,19 @@ func TestDiffHumanizesBytes(t *testing.T) {
 
 	if out := buf.String(); !strings.Contains(out, "+2.0MiB") {
 		t.Errorf("output missing +2.0MiB\n%s", out)
+	}
+}
+
+func TestHumanizeHandlesMinInt64(t *testing.T) {
+	t.Parallel()
+
+	got := render.Humanize(math.MinInt64, "bytes")
+
+	if strings.HasPrefix(got, "--") {
+		t.Fatalf("humanize(MinInt64) = %q, sign doubled by negation overflow", got)
+	}
+	if got != "-8.0EiB" {
+		t.Errorf("humanize(MinInt64, bytes) = %q, want -8.0EiB", got)
 	}
 }
 
