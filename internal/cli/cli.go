@@ -29,7 +29,7 @@ var subcommands = []subcommand{
 	},
 	{
 		name:    "diff",
-		summary: "Diff two pprof profiles into a culprit ranking and flamegraph",
+		summary: "Diff two pprof profiles into a ranked culprit list",
 		run:     runDiff,
 		usage:   printDiffUsage,
 	},
@@ -91,12 +91,6 @@ func runBench(args []string, stdout, stderr io.Writer) int {
 // -- <cmd> or by polling an existing --pprof endpoint — builds a time series of
 // inuse_space per allocation site, and ranks the sites that keep growing.
 func runLeak(args []string, stdout, stderr io.Writer) int {
-	return notImplemented(args, stdout, stderr)
-}
-
-// runDiff runs the diff engine on any two pprof profiles, ranking the
-// per-function cumulative delta and pointing at the line that moved most.
-func runDiff(args []string, stdout, stderr io.Writer) int {
 	return notImplemented(args, stdout, stderr)
 }
 
@@ -171,22 +165,6 @@ func printLeakUsage(w io.Writer) {
 	fmt.Fprintln(w, "  --interval <d>   Time between heap samples (e.g., 2s)")
 	fmt.Fprintln(w, "  --flame <file>   Write a differential flamegraph SVG here")
 	fmt.Fprintln(w, "  --top <n>        Show the top n growing sites")
-	fmt.Fprintln(w, "  -o <file>        Write the report here instead of the terminal")
-	fmt.Fprintln(w, "  --help, -h       Show this help")
-}
-
-func printDiffUsage(w io.Writer) {
-	fmt.Fprintln(w, "culprit diff — diff two pprof profiles into a culprit ranking.")
-	fmt.Fprintln(w)
-	fmt.Fprintln(w, "USAGE:")
-	fmt.Fprintln(w, "  culprit diff <base.prof> <head.prof>")
-	fmt.Fprintln(w)
-	fmt.Fprintln(w, "Ranks the per-function cumulative delta between any two pprof profiles and")
-	fmt.Fprintln(w, "points at the line that moved most. Works with CPU, heap, or any pprof profile.")
-	fmt.Fprintln(w)
-	fmt.Fprintln(w, "FLAGS:")
-	fmt.Fprintln(w, "  --flame <file>   Write a differential flamegraph SVG here")
-	fmt.Fprintln(w, "  --top <n>        Show the top n movers")
 	fmt.Fprintln(w, "  -o <file>        Write the report here instead of the terminal")
 	fmt.Fprintln(w, "  --help, -h       Show this help")
 }
