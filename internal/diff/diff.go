@@ -39,7 +39,15 @@ func Rank(base, head []profile.Sample) []Change {
 	}
 
 	sort.SliceStable(changes, func(i, j int) bool {
-		return abs(changes[i].FlatDelta()) > abs(changes[j].FlatDelta())
+		a, b := abs(changes[i].FlatDelta()), abs(changes[j].FlatDelta())
+		if a != b {
+			return a > b
+		}
+		if changes[i].Function != changes[j].Function {
+			return changes[i].Function < changes[j].Function
+		}
+
+		return changes[i].File < changes[j].File
 	})
 
 	return changes
