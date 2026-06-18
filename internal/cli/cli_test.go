@@ -39,9 +39,15 @@ func TestRun(t *testing.T) {
 		},
 		{
 			name:       "subcommand not implemented",
-			args:       []string{"diff", "base.prof", "head.prof"},
+			args:       []string{"leak"},
 			wantCode:   exit.NotImplemented,
 			wantStderr: "not implemented",
+		},
+		{
+			name:       "diff needs two profiles",
+			args:       []string{"diff", "only-one.prof"},
+			wantCode:   exit.Usage,
+			wantStderr: "need two profiles",
 		},
 	}
 
