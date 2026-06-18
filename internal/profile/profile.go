@@ -3,6 +3,7 @@ package profile
 import (
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	"github.com/google/pprof/profile"
@@ -26,6 +27,16 @@ func Load(r io.Reader) (*profile.Profile, error) {
 	}
 
 	return p, nil
+}
+
+func LoadFile(path string) (*profile.Profile, error) {
+	f, err := os.Open(path) //nolint:gosec // path is a user-supplied profile to open
+	if err != nil {
+		return nil, fmt.Errorf("open profile: %w", err)
+	}
+	defer func() { _ = f.Close() }()
+
+	return Load(f)
 }
 
 // Samples normalizes p into leaf-first stacks carrying the value of the named
@@ -81,6 +92,16 @@ func DefaultSampleType(p *profile.Profile) string {
 	}
 
 	return p.SampleType[len(p.SampleType)-1].Type
+}
+
+func Unit(p *profile.Profile, sampleType string) string {
+	for _, vt := range p.SampleType {
+		if vt.Type == sampleType {
+			return vt.Unit
+		}
+	}
+
+	return ""
 }
 
 func frameOf(line profile.Line) Frame {

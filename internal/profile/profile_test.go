@@ -116,6 +116,19 @@ func TestSampleTypes(t *testing.T) {
 	}
 }
 
+func TestUnit(t *testing.T) {
+	t.Parallel()
+
+	p := sampleProfile()
+
+	if got := profile.Unit(p, "cpu"); got != "nanoseconds" {
+		t.Errorf("Unit(cpu) = %q, want nanoseconds", got)
+	}
+	if got := profile.Unit(p, "missing"); got != "" {
+		t.Errorf("Unit(missing) = %q, want empty string", got)
+	}
+}
+
 func TestDefaultSampleType(t *testing.T) {
 	t.Parallel()
 
