@@ -91,15 +91,17 @@ func aggregate(samples []profile.Sample) buckets {
 
 		for _, f := range s.Stack {
 			k := key{f.Function, f.File}
+			b := acc.at(k)
+
 			if !seen[k] {
 				seen[k] = true
-				acc.at(k).cum += s.Value
+				b.cum += s.Value
 			}
 
 			lk := lineKey{k, f.Line}
 			if !seenLine[lk] {
 				seenLine[lk] = true
-				acc.at(k).lines[f.Line] += s.Value
+				b.lines[f.Line] += s.Value
 			}
 		}
 	}
