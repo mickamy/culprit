@@ -1,7 +1,8 @@
 package diff
 
 import (
-	"sort"
+	"cmp"
+	"slices"
 
 	"github.com/mickamy/culprit/internal/profile"
 )
@@ -38,16 +39,15 @@ func Rank(base, head []profile.Sample) []Change {
 		})
 	}
 
-	sort.SliceStable(changes, func(i, j int) bool {
-		a, b := abs(changes[i].FlatDelta()), abs(changes[j].FlatDelta())
-		if a != b {
-			return a > b
+	slices.SortStableFunc(changes, func(a, b Change) int {
+		if d := cmp.Compare(abs(b.FlatDelta()), abs(a.FlatDelta())); d != 0 {
+			return d
 		}
-		if changes[i].Function != changes[j].Function {
-			return changes[i].Function < changes[j].Function
+		if d := cmp.Compare(a.Function, b.Function); d != 0 {
+			return d
 		}
 
-		return changes[i].File < changes[j].File
+		return cmp.Compare(a.File, b.File)
 	})
 
 	return changes
